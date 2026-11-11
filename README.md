@@ -1,24 +1,86 @@
-# Remix of Kayan Business Compass
+# Kayan Business Compass
 
-Implement exactly the screenshot and nothing else
+A business operations workspace designed to help teams organize day-to-day work in one place.
 
-This project was built with [Lovable](https://lovable.dev).
+**Project preview:** https://id-preview--b1c5f7a8-c016-4eaa-845c-d3f8071a003a.lovable.app  
+**Lovable editor:** https://lovable.dev/projects/b1c5f7a8-c016-4eaa-845c-d3f8071a003a
 
-## Build with Lovable
+## Overview
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/b1c5f7a8-c016-4eaa-845c-d3f8071a003a).
+Kayan brings common business workflows together, including:
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+- Client and company records
+- Tasks and team collaboration
+- Invoices and invoice items
+- Inventory and expense tracking
+- Company membership, roles, and access approval
+- Subscription and payment-review workflows
 
-## Development
+The available modules and access rules are evolving. Review and test the application in a non-production environment before using it with real business or customer data.
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+## Technology
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+- React and TypeScript
+- TanStack Start and TanStack Router
+- Vite
+- Supabase (authentication and database)
+- Drizzle ORM / Drizzle Kit
+- Tailwind CSS
+- Vitest
+
+## Getting started
+
+### Requirements
+
+- [Bun](https://bun.sh/) (recommended; the repository includes `bun.lock`)
+- A Supabase project with the required schema and database functions
+
+### Install and run
+
+```bash
+git clone https://github.com/androfady340-source/remix-of-kayan-business-compass.git
+cd remix-of-kayan-business-compass
+bun install
+cp .env.example .env
 ```
+
+Fill in the local environment values, then start the development server:
+
+```bash
+bun run dev
+```
+
+## Environment variables
+
+Copy `.env.example` to `.env` and configure the values for your own Supabase project.
+
+| Variable | Purpose |
+| --- | --- |
+| `SUPABASE_PROJECT_ID` | Supabase project identifier |
+| `SUPABASE_URL` | Supabase project URL used by server-side code |
+| `SUPABASE_PUBLISHABLE_KEY` | Supabase publishable key |
+| `VITE_SUPABASE_PROJECT_ID` | Project identifier exposed to the Vite client build |
+| `VITE_SUPABASE_URL` | Supabase URL exposed to the Vite client build |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Publishable key exposed to the Vite client build |
+
+Never put a Supabase `service_role` key, database password, access token, or any other privileged secret in client-side variables or commit them to Git.
+
+## Useful commands
+
+```bash
+bun run dev       # Start local development
+bun run build     # Create a production build
+bun run lint      # Run ESLint
+bun run test      # Run the test suite
+bun run preview   # Preview the production build
+```
+
+## Deployment and security
+
+Deployment requires correctly configured runtime environment variables and a Supabase project whose Row Level Security policies and database functions have been reviewed. Do not assume that a successful frontend build proves database authorization or production readiness.
+
+Before handling real users or payments, verify authentication, company-level data isolation, role permissions, subscription enforcement, and administrative RPC access.
+
+## Project status
+
+This repository is connected to Lovable. Changes made in the Lovable editor are synchronized to the connected GitHub branch, and commits pushed to the connected branch may sync back to Lovable. Avoid force-pushing or rewriting published Git history.
