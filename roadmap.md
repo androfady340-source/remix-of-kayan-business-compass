@@ -12,3 +12,6 @@
 - [ ] Activate all module navigation and mobile access.
 - [ ] Configure Cloudflare Workers and document commands/environment.
 - [ ] Verify company isolation, permissions and real-user flows; run tests and save changes.
+- [x] Fix task and invoice saving; restore sign-up account setup; owner account access.
+- [x] Team join code at sign-up; resend confirmation email.
+- [ ] Move database to the user's own external account (waiting on user's account details).

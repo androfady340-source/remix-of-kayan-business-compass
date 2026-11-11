@@ -32,3 +32,4 @@ use the editor.
 - Keep SQL RPC nullable-argument corrections in a local typed client facade; generated integration files stay untouched and null UUID/date arguments remain null at runtime.
 - Manual subscriptions and account approvals are enforced by protected SQL RPCs and RLS; auth succeeds before eligibility, and only super-admin reviews can activate access.
 - Provision the designated site-owner role only after email confirmation using protected settings, never frontend email comparisons; new accounts start pending.
+- Super admins may use /app and onboarding like any approved owner; /admin stays reachable separately.
