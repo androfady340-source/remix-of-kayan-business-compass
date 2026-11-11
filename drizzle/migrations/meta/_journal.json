@@ -8,6 +8,13 @@
       "when": 1794383767493,
       "tag": "0000_restore_auth_triggers_and_owner",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794383885622,
+      "tag": "0001_fix_business_link_validation",
+      "breakpoints": true
     }
   ]
 }
