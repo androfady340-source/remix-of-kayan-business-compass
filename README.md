@@ -2,8 +2,7 @@
 
 A business operations workspace designed to help teams organize day-to-day work in one place.
 
-**Project preview:** https://id-preview--b1c5f7a8-c016-4eaa-845c-d3f8071a003a.lovable.app  
-**Lovable editor:** https://lovable.dev/projects/b1c5f7a8-c016-4eaa-845c-d3f8071a003a
+**Project preview:** https://id-preview--b1c5f7a8-c016-4eaa-845c-d3f8071a003a.lovable.app
 
 ## Overview
 
@@ -33,7 +32,7 @@ The available modules and access rules are evolving. Review and test the applica
 ### Requirements
 
 - [Bun](https://bun.sh/) (recommended; the repository includes `bun.lock`)
-- A Supabase project with the required schema and database functions
+- A Supabase project with the required schema and database functions. The current repository does not yet include a complete, standalone database migration set; the schema is managed through the connected Lovable/Supabase project.
 
 ### Install and run
 
@@ -80,6 +79,10 @@ bun run preview   # Preview the production build
 Deployment requires correctly configured runtime environment variables and a Supabase project whose Row Level Security policies and database functions have been reviewed. Do not assume that a successful frontend build proves database authorization or production readiness.
 
 Before handling real users or payments, verify authentication, company-level data isolation, role permissions, subscription enforcement, and administrative RPC access.
+
+## License
+
+No license has been added yet. Until a license is included, the source remains under the default copyright terms; do not assume permission to reuse or redistribute it.
 
 ## Project status
 
