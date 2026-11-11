@@ -13,7 +13,6 @@ import { accessQuery } from "@/lib/subscriptions";
 export const Route = createFileRoute("/_authenticated/app")({
   beforeLoad: async ({ context }) => {
     const access = await context.queryClient.fetchQuery(accessQuery);
-    if (access.isAdmin) throw redirect({ to: "/admin" });
     if (!access.active) throw redirect({ to: "/subscription" });
     const ws = await context.queryClient.ensureQueryData(workspaceQuery);
     if (!ws.company) throw redirect({ to: "/onboarding" });

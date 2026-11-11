@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -46,6 +46,21 @@ function AuthPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [joinCode, setJoinCode] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(id);
+  }, [cooldown]);
+  const resend = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.resend({ type: "signup", email: email.trim(), options: { emailRedirectTo: window.location.origin + "/auth" } });
+    setLoading(false);
+    if (error) return void toast.error(error.message);
+    toast.success(t("auth.resent"));
+    setCooldown(60);
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,12 +80,12 @@ function AuthPage() {
       const { data, error } = await supabase.auth.signUp({
         email: r.data.email,
         password,
-        options: { emailRedirectTo: window.location.origin + "/auth", data: { full_name: name.trim(), language: lang } },
+        options: { emailRedirectTo: window.location.origin + "/auth", data: { full_name: name.trim(), language: lang, ...(joinCode.trim() ? { join_code: joinCode.trim().toUpperCase() } : {}) } },
       });
       setLoading(false);
       if (error) return void toast.error(error.message);
       if (data.session) navigate({ to: "/app" });
-      else setSent(true);
+      else { setSent(true); setCooldown(60); }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email: r.data.email, password });
       setLoading(false);
@@ -88,7 +103,12 @@ function AuthPage() {
       <main className="flex flex-1 items-center justify-center px-5 pb-16">
         <div className="w-full max-w-md rounded-3xl border bg-card p-8 shadow-soft">
           {sent ? (
-            <p className="text-center text-lg">{t("auth.checkEmail")}</p>
+            <div className="space-y-5 text-center">
+              <p className="text-lg">{t("auth.checkEmail")}</p>
+              <Button variant="outline" disabled={loading || cooldown > 0} onClick={resend} className="h-12 w-full rounded-xl">
+                {cooldown > 0 ? t("auth.resendIn", { n: cooldown }) : t("auth.resend")}
+              </Button>
+            </div>
           ) : mode === "forgot" ? (
             <>
               <h1 className="text-2xl font-extrabold">{t("auth.forgotTitle")}</h1>
@@ -117,6 +137,12 @@ function AuthPage() {
                 {mode === "signup" && (
                   <Field id="name" label={t("auth.fullName")} error={errors["name"]}>
                     <Input id="name" value={name} onChange={(e) => setName(e.target.value)} className="h-12 rounded-xl" />
+                  </Field>
+                )}
+                {mode === "signup" && (
+                  <Field id="join-code" label={t("auth.joinCode")}>
+                    <Input id="join-code" dir="ltr" value={joinCode} onChange={(e) => setJoinCode(e.target.value)} className="h-12 rounded-xl uppercase" />
+                    <p className="mt-1 text-xs text-muted-foreground">{t("auth.joinHint")}</p>
                   </Field>
                 )}
                 <Field id="email" label={t("auth.email")} error={errors["email"]}>
