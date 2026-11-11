@@ -1,0 +1,19 @@
+import { createFileRoute } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
+import { Users, ListChecks, Clock, Receipt, Wallet, Package } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useI18n } from '@/lib/i18n';
+import { useWorkspace } from '@/lib/workspace';
+import { supabase } from '@/integrations/supabase/client';
+import { dashboardSummary, monthlyCashflow } from '@/lib/dashboard';
+import { pageHead } from '@/lib/seo';
+import { money, todayISO } from '@/components/ModuleKit';
+export const Route=createFileRoute('/_authenticated/app/')({head:()=>pageHead('Dashboard','Your Kayan business statistics and six-month cashflow.'),component:Dashboard});
+function Dashboard(){
+ const {t,lang}=useI18n();const ws=useWorkspace();const cid=ws.company?.id; const enabled=(key:string)=>ws.modules.some(m=>m.module_key===key&&m.enabled);
+ const result=useQuery({queryKey:['dashboard',cid,ws.modules.map(m=>`${m.module_key}:${m.enabled}`).join(',')],enabled:!!cid,queryFn:async()=>{if(!cid)throw Error('Missing company');const fetchRows=async(table:'clients'|'tasks'|'invoices'|'expenses'|'inventory_items',key:string)=>{if(!enabled(key))return [];const r=await supabase.from(table).select('*').eq('company_id',cid);if(r.error)throw r.error;return r.data;};const [clients,tasks,invoices,expenses,inventory]=await Promise.all([fetchRows('clients','clients'),fetchRows('tasks','tasks'),fetchRows('invoices','invoices'),fetchRows('expenses','expenses'),fetchRows('inventory_items','inventory')]);return {clients,tasks,invoices,expenses,inventory} as Parameters<typeof dashboardSummary>[0];}});
+ const data=result.data??{clients:[],tasks:[],invoices:[],expenses:[],inventory:[]};const summary=dashboardSummary(data,todayISO());const series=monthlyCashflow(data.invoices,data.expenses,todayISO());
+ const stats=[{key:'clients',icon:Users,label:t('dash.totalClients'),value:summary.clients},{key:'tasks',icon:ListChecks,label:t('dash.openTasks'),value:summary.open},{key:'tasks',icon:Clock,label:t('dash.overdueTasks'),value:summary.overdue},{key:'invoices',icon:Receipt,label:t('dash.unpaid'),value:summary.unpaid},{key:'expenses',icon:Wallet,label:t('dash.monthExpenses'),value:summary.expenses},{key:'inventory',icon:Package,label:t('dash.lowStock'),value:summary.low}].filter(s=>enabled(s.key));
+  return <div><h1 className="text-2xl font-extrabold sm:text-3xl">{t('dash.hello',{name:ws.company?.name??''})}</h1>{result.isError&&<p role="alert" className="mt-4 text-destructive">{t('common.error')}</p>}<div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{stats.map(s=><div key={s.label} className="rounded-2xl border bg-card p-6 shadow-soft"><s.icon className="size-6 text-primary"/><p className="mt-4 text-sm text-muted-foreground">{s.label}</p>{result.isLoading?<Skeleton className="mt-2 h-9 w-20"/>:<p className="mt-2 text-3xl font-extrabold">{money(s.value,lang)}</p>}</div>)}</div>{(enabled('invoices')||enabled('expenses'))&&<section className="mt-10 border-t pt-6"><h2 className="mb-6 text-lg font-bold">{t('dash.cashflow')}</h2><div className="h-80 w-full" dir="ltr"><ResponsiveContainer width="100%" height="100%"><BarChart data={series} margin={{left:0,right:8}}><XAxis dataKey="month" tickFormatter={v=>new Intl.DateTimeFormat(lang==='ar'?'ar-EG':'en-US',{month:'short'}).format(new Date(`${v}-01T00:00:00Z`))}/><YAxis width={48}/><Tooltip/><Legend/>{enabled('invoices')&&<Bar dataKey="income" name={t('dash.income')} fill="var(--chart-1)" radius={[4,4,0,0]}/>}{enabled('expenses')&&<Bar dataKey="expenses" name={t('mod.expenses')} fill="var(--chart-2)" radius={[4,4,0,0]}/>}</BarChart></ResponsiveContainer></div></section>}</div>;
+}

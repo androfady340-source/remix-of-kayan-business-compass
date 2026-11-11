@@ -1,0 +1,14 @@
+# Kayan completion
+- [x] Add private site administration for account approvals and manual InstaPay payment review.
+- [x] Show four subscription plans after registration; collect transfer reference and registered email reminder.
+- [ ] Enforce approved, active access securely; test manual subscription workflow and save changes.
+- [x] Fix dashboard JSX and nullable RPC argument types; verify automatic typecheck/build and run regression tests.
+- [ ] Verify app loads and preserve current changes.
+- [ ] Finish invoices and printable view.
+- [ ] Finish dashboard statistics and six-month chart.
+- [ ] Finish owner team invitations, roles and removal.
+- [ ] Finish restricted admin company subscriptions.
+- [ ] Extend load/clear sample data to every module.
+- [ ] Activate all module navigation and mobile access.
+- [ ] Configure Cloudflare Workers and document commands/environment.
+- [ ] Verify company isolation, permissions and real-user flows; run tests and save changes.
