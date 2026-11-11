@@ -78,7 +78,7 @@ const dict = {
     "auth.checkEmail": "أرسلنا رابط تأكيد إلى بريدك. افتحه ثم سجّل الدخول.",
     "auth.welcome": "أهلاً بك",
     "auth.welcomeSub": "سجّل دخولك لمتابعة عملك",
-    "auth.createSub": "أنشئ حسابك المجاني",
+    "auth.createSub": "أنشئ حسابك",
     "auth.forgot": "نسيت كلمة المرور؟",
     "auth.forgotTitle": "استعادة كلمة المرور",
     "auth.forgotSub": "اكتب بريدك وهنبعتلك رابط لتعيين كلمة مرور جديدة.",
