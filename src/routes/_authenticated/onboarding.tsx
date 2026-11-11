@@ -18,7 +18,6 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({ meta: [{ title: "Set up your workspace | Kayan" }, { name: "description", content: "Create your Kayan workspace in 3 steps." }] }),
   beforeLoad: async ({ context }) => {
     const access = await context.queryClient.fetchQuery(accessQuery);
-    if (access.isAdmin) throw redirect({ to: "/admin" });
     if (!access.active) throw redirect({ to: "/subscription" });
     const ws = await context.queryClient.fetchQuery(workspaceQuery);
     if (ws.company) throw redirect({ to: "/app" });
