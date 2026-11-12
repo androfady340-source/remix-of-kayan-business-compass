@@ -651,6 +651,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      complete_account_onboarding: { Args: never; Returns: string }
       create_company: {
         Args: { _business_type: string; _modules: string[]; _name: string }
         Returns: string
