@@ -15,6 +15,13 @@
       "when": 1794383885622,
       "tag": "0001_fix_business_link_validation",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794463412771,
+      "tag": "0002_complete_member_onboarding_and_account_reviews",
+      "breakpoints": true
     }
   ]
 }

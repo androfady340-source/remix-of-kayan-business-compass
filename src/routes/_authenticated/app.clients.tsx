@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -22,7 +23,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/app/clients")({
-  head: () => ({ meta: [{ title: "Clients | Kayan" }, { name: "description", content: "Manage your clients." }] }),
+  head: () => pageHead("Clients", "Manage your Kayan clients."),
   component: ClientsPage,
 });
 

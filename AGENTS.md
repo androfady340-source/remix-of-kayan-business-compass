@@ -33,3 +33,6 @@ use the editor.
 - Manual subscriptions and account approvals are enforced by protected SQL RPCs and RLS; auth succeeds before eligibility, and only super-admin reviews can activate access.
 - Provision the designated site-owner role only after email confirmation using protected settings, never frontend email comparisons; new accounts start pending.
 - Super admins may use /app and onboarding like any approved owner; /admin stays reachable separately.
+- Resolve login destinations through the authenticated role RPC, never an email comparison, to preserve server-owned privileges.
+- Complete confirmed join-code onboarding through a protected idempotent SQL RPC before eligibility reads; members inherit company access rather than individual paid access.
+- Derive the admin owner-review list from Auth users with left joins, excluding team-only members, so missing application rows cannot hide applicants.

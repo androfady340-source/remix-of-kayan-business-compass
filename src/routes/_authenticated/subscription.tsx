@@ -20,6 +20,7 @@ export const Route = createFileRoute('/_authenticated/subscription')({
   beforeLoad: async ({ context }) => {
     const access = await context.queryClient.fetchQuery(accessQuery);
     if (access.isAdmin) throw redirect({ to: '/admin' });
+    if (access.active) throw redirect({ to: '/app' });
   },
   loader: ({ context }) => context.queryClient.ensureQueryData(accessQuery),
   component: Subscription,
