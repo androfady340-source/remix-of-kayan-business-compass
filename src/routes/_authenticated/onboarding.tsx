@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -15,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { accessQuery } from "@/lib/subscriptions";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
-  head: () => ({ meta: [{ title: "Set up your workspace | Kayan" }, { name: "description", content: "Create your Kayan workspace in 3 steps." }] }),
+  head: () => pageHead("Set up your workspace", "Create your Kayan company workspace."),
   beforeLoad: async ({ context }) => {
     const access = await context.queryClient.fetchQuery(accessQuery);
     if (!access.active) throw redirect({ to: "/subscription" });

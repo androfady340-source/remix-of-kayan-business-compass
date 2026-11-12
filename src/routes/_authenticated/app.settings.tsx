@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -17,7 +18,7 @@ import { TeamSettings } from "@/components/TeamSettings";
 import type { Json } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/app/settings")({
-  head: () => ({ meta: [{ title: "Settings | Kayan" }, { name: "description", content: "Workspace settings." }] }),
+  head: () => pageHead("Settings", "Manage your Kayan workspace and team settings."),
   beforeLoad: async ({ context }) => {
     const ws = await context.queryClient.ensureQueryData(workspaceQuery);
     if (!canManageSettings(ws.role)) throw redirect({ to: "/app" });

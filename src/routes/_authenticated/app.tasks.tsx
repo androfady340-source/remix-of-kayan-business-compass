@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -20,7 +21,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/app/tasks")({
-  head: () => ({ meta: [{ title: "Tasks | Kayan" }, { name: "description", content: "Track your team's tasks." }] }),
+  head: () => pageHead("Tasks", "Track your Kayan team’s tasks."),
   component: TasksPage,
 });
 

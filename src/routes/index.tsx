@@ -11,6 +11,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Manage clients, tasks, invoices and expenses. Set up in under 3 minutes, in Arabic or English." },
       { property: "og:title", content: "Kayan | كيان — Simple business management" },
       { property: "og:description", content: "Manage clients, tasks, invoices and expenses. Set up in under 3 minutes." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Landing,

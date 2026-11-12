@@ -1,3 +1,4 @@
+import { pageHead } from "@/lib/seo";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -18,7 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/app/inventory")({
-  head: () => ({ meta: [{ title: "Inventory | Kayan" }, { name: "description", content: "Keep track of your stock." }] }),
+  head: () => pageHead("Inventory", "Track your Kayan stock and inventory."),
   component: InventoryPage,
 });
 
