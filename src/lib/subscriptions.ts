@@ -18,6 +18,8 @@ export const accessQuery = queryOptions({
   queryFn: async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) throw new Error('Not signed in');
+    const onboarding = await supabase.rpc('complete_account_onboarding');
+    if (onboarding.error) throw onboarding.error;
     const [role, access, payments, active] = await Promise.all([
       supabase.rpc('is_super_admin'),
       supabase.from('account_access').select('*').eq('user_id', data.user.id).maybeSingle(),

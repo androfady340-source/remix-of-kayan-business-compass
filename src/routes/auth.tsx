@@ -8,6 +8,7 @@ import { Field } from "@/components/Field";
 import { HeaderControls, Logo } from "@/components/HeaderControls";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
+import { loginDestination } from "@/lib/login-destination";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>): { mode?: "signup" } => (s["mode"] === "signup" ? { mode: "signup" } : {}),
@@ -17,6 +18,8 @@ export const Route = createFileRoute("/auth")({
       { name: "description", content: "Log in or create your Kayan account." },
       { property: "og:title", content: "Log in | Kayan" },
       { property: "og:description", content: "Log in or create your Kayan account." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AuthPage,
@@ -48,6 +51,21 @@ function AuthPage() {
   const [sent, setSent] = useState(false);
   const [joinCode, setJoinCode] = useState("");
   const [cooldown, setCooldown] = useState(0);
+  const enterAccount = async () => {
+    const role = await supabase.rpc('is_super_admin');
+    if (role.error) throw role.error;
+    await navigate({ to: loginDestination(Boolean(role.data)) });
+  };
+  useEffect(() => {
+    let active = true;
+    void supabase.auth.getUser().then(async ({ data }) => {
+      if (!active || !data.user) return;
+      const role = await supabase.rpc('is_super_admin');
+      if (role.error) throw role.error;
+      if (active) await navigate({ to: loginDestination(Boolean(role.data)) });
+    }).catch(() => { if (active) toast.error(t('common.error')); });
+    return () => { active = false; };
+  }, [navigate, t]);
   useEffect(() => {
     if (cooldown <= 0) return;
     const id = setTimeout(() => setCooldown((c) => c - 1), 1000);
@@ -84,13 +102,13 @@ function AuthPage() {
       });
       setLoading(false);
       if (error) return void toast.error(error.message);
-      if (data.session) navigate({ to: "/app" });
+      if (data.session) await enterAccount().catch(() => toast.error(t('common.error')));
       else { setSent(true); setCooldown(60); }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email: r.data.email, password });
       setLoading(false);
       if (error) return void toast.error(error.message);
-      navigate({ to: "/app" });
+      await enterAccount().catch(() => toast.error(t('common.error')));
     }
   };
 
